@@ -73,7 +73,7 @@ class NameVAE(nn.Module):
         fnames = self.fname_set.to_words(fname_info[0])
         mnames = self.mname_set.to_words(mname_info[0])
         lnames = self.lname_set.to_words(lname_info[0])
-        format_ids = torch.argmax(format_info[0], dim=2).squeeze().numpy().tolist()
+        format_ids = torch.argmax(format_info[0], dim=2).squeeze().to(torch.device('cpu')).numpy().tolist()
         
         result = []
         for index in range(batch_shape):
@@ -104,8 +104,8 @@ class NameVAE(nn.Module):
         
         format_sample = self._sample_categorical(format_probs)
         fname_sample = self._sample_categorical(fname_probs)
-        mname_sample = self._sample_categorical(fname_probs)
-        lname_sample = self._sample_categorical(fname_probs)
+        mname_sample = self._sample_categorical(mname_probs)
+        lname_sample = self._sample_categorical(lname_probs)
         return (fname_sample,fname_probs), (mname_sample,mname_probs), (lname_sample,lname_probs), (format_sample,format_probs)
 
     def _decode(self, fname_sample: torch.tensor, mname_sample: torch.tensor, lname_sample: torch.tensor, format_sample: torch.tensor) -> torch.tensor:

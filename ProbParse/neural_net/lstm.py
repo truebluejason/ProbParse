@@ -83,7 +83,7 @@ class Decoder(nn.Module):
         hidden_cat = torch.cat((hidden[0], hidden[1]), dim=2)
         attn_out = self.attn(torch.cat((input, hidden_cat), dim=2))
         # Apply mask to attention, and set pads to negative infinity
-        attn_out = torch.where(mask, attn_out, torch.tensor(float('-inf')))
+        attn_out = torch.where(mask, attn_out, torch.tensor(float('-inf')).to(DEVICE))
         # Softmax the attention out
         attn_weights = F.softmax(attn_out, dim=2)
         attn_applied = torch.bmm(attn_weights.transpose(0, 1), encoder_outputs.transpose(0, 1)).transpose(0, 1)

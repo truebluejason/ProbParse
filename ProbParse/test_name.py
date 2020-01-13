@@ -21,7 +21,7 @@ def predict(vae, data):
 if __name__ == "__main__":
     config = load_json(sys.argv[1])
     SESSION_NAME = config['session_name']
-    vae = NameVAE(hidden_size=config['hidden_size'], num_layers=1, test_mode=True)
+    vae = NameVAE(hidden_size=config['hidden_size'], num_layers=1, test_mode=True).to(const.DEVICE)
     vae.load_state_dict(torch.load(f"ProbParse/nn_model/{SESSION_NAME}", map_location=const.DEVICE))
 
     predict(vae, TEST_STRINGS)

@@ -16,7 +16,7 @@ from model.name import NameVAE
 parser = argparse.ArgumentParser()
 parser.add_argument('--name', help='Name of the Session', nargs='?', default='UNNAMED_SESSION', type=str)
 parser.add_argument('--hidden_size', help='Size of the hidden layer of LSTM', nargs='?', default=256, type=int)
-parser.add_argument('--lr', help='Learning rate', nargs='?', default=0.001, type=float)
+parser.add_argument('--lr', help='Learning rate', nargs='?', default=0.0005, type=float)
 parser.add_argument('--batch_size', help='Size of the batch training on', nargs='?', default=256, type=int)
 parser.add_argument('--num_epochs', help='Number of epochs', nargs='?', default=3000, type=int)
 parser.add_argument('--continue_training', help='Boolean argument whether to continue training an existing model',
@@ -40,7 +40,7 @@ def loss_function(x, x_hat, log_prob, kls, kl_weights):
     loss = binary_cross_entropy + reinforce - reinforce.detach() + kl_sum
     return loss
 
-def train_one_epoch(vae, data, kl_weights, print_every=1):
+def train_one_epoch(vae, data, kl_weights, print_every=3):
     optimizer = torch.optim.Adam(vae.parameters(), lr=args.lr)
     data = iter(data)
     epoch_loss = 0.
@@ -107,7 +107,7 @@ def plot_losses(train_losses, test_losses, folder: str, filename: str):
 
 if __name__ == "__main__":
     train_data, test_data = train_test_split('data/balanced.csv')
-    vae = NameVAE(hidden_size=args.hidden_size, num_layers=1, test_mode=False)
+    vae = NameVAE(hidden_size=args.hidden_size, num_layers=1, test_mode=False).to(const.DEVICE)
     if args.continue_training:
         vae.load_state_dict(torch.load(f"ProbParse/nn_model/{SESSION_NAME}", map_location=const.DEVICE))
     kl_weights = {'fname': 0., 'mname': 0., 'lname': 0., 'format': 0.}

@@ -1,1 +1,1 @@
-{"session_name": "first", "hidden_size": 256, "batch_size": 256, "num_epochs": 3000, "learning_rate": 0.001}
+{"session_name": "first", "hidden_size": 256, "batch_size": 256, "num_epochs": 3000, "learning_rate": 0.0001}
